@@ -1,5 +1,15 @@
 import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
+import type { Invoice } from 'types/invoice';
+
+export const getPdfFilename = (invoice: Invoice): string => {
+    const firstName = invoice.customerName.trim().split(/\s+/)[0] || 'Invoice';
+    const date = new Date(invoice.invoiceDate);
+    const dd = String(date.getDate()).padStart(2, '0');
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const yy = String(date.getFullYear()).slice(-2);
+    return `${firstName}-${dd}-${mm}-${yy}.pdf`;
+};
 
 // Generates a PDF from an element and returns a Blob. If `filename` is provided
 // the PDF will also be saved/downloaded using jsPDF's save().

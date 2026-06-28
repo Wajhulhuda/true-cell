@@ -13,5 +13,6 @@ export interface Invoice {
     items: InvoiceItem[];
     subtotal: number;
     total: number;
-    paymentStatus?: 'paid' | 'pending';
+    depositAmount?: number;
+    paymentStatus?: 'paid' | 'pending' | 'deposit';
 }

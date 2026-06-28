@@ -1,16 +1,25 @@
 export interface SalesRep {
     id: number;
     name: string;
+    code: string;
 }
 
+export const SALES_REPS: SalesRep[] = [
+    { id: 1, name: 'Shahid Khalid', code: 'TC0050' },
+    { id: 2, name: 'Ahmed', code: 'TC0663' },
+    { id: 3, name: 'John Doe', code: 'TC0777' },
+];
+
 export const fetchSalesReps = async (): Promise<SalesRep[]> => {
-    // Mock API with small delay
     return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve([
-                { id: 1, name: 'Shahid Khalid' },
-                { id: 2, name: 'John Doe' }
-            ]);
-        }, 400);
+        setTimeout(() => resolve(SALES_REPS), 400);
     });
+};
+
+export const validateLogin = (name: string, code: string): SalesRep | null => {
+    return SALES_REPS.find(
+        r =>
+            r.name.toLowerCase() === name.toLowerCase().trim() &&
+            r.code === code.trim()
+    ) ?? null;
 };

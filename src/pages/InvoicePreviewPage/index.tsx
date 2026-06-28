@@ -1,7 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import { useInvoiceStore } from 'store/invoiceStore';
 import { getItem } from 'utils/localStorage';
-import { generatePdf } from 'utils/pdf';
+import { generatePdf, getPdfFilename } from 'utils/pdf';
 import Header from 'components/Header/Header';
 import { useLocation } from 'react-router-dom';
 import InvoicePrintView from 'components/InvoicePrintView/InvoicePrintView';
@@ -23,7 +23,7 @@ export const InvoicePreviewPage: React.FC = () => {
     const handleDownload = async () => {
         if (!ref.current || !invoice) return;
         try {
-            await generatePdf(ref.current, `${invoice.invoiceNumber}.pdf`);
+            await generatePdf(ref.current, getPdfFilename(invoice));
         } catch (err) {
             console.error(err);
             alert('Failed to generate PDF');
@@ -38,7 +38,7 @@ export const InvoicePreviewPage: React.FC = () => {
         if (!ref.current || !invoice) return;
         try {
             const blob = await generatePdf(ref.current);
-            const file = new File([blob], `${invoice.invoiceNumber}.pdf`, { type: 'application/pdf' });
+            const file = new File([blob], getPdfFilename(invoice), { type: 'application/pdf' });
 
             // Use Web Share API if available (mobile/Chromium browsers)
             // Fallback: open PDF in new tab for manual sharing/download
@@ -80,15 +80,6 @@ export const InvoicePreviewPage: React.FC = () => {
         );
     }
 
-    const formattedDate = new Date(invoice.invoiceDate).toLocaleString('en-GB', {
-        day: '2-digit',
-        month: 'long',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true,
-    });
-
     return (
         <div className="page invoice-preview">
 
@@ -99,7 +90,7 @@ export const InvoicePreviewPage: React.FC = () => {
 
                     {/* Download / Print */}
                     <div className="preview-actions">
-                        <button onClick={handleDownload}>Download PDF</button>
+                        <button onClick={handleDownload}>Download</button>
                         <button onClick={handleShare} style={{ background: 'var(--whatsapp)', color: '#fff' }}>
                             Share
                         </button>
